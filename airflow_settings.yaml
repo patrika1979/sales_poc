@@ -1,0 +1,55 @@
+# This file allows you to configure Airflow Connections, Pools, and Variables in a single place for local development only.
+# NOTE: If putting a dict in conn_extra, please wrap in single quotes.
+
+# For more information, refer to our docs: https://www.astronomer.io/docs/cloud/stable/develop/customize-image#configure-airflowsettingsyaml
+# For issues or questions, reach out to support@astronomer.io
+
+airflow:
+  connections:
+    - conn_id: bigquery_default
+      conn_type: google_cloud_platform
+      conn_host:
+      conn_schema:
+      conn_login:
+      conn_password:
+      conn_port:
+      conn_extra: {
+  "type": "service_account",
+  "project_id": "playground-s-11-09539975",
+  "private_key_id": "6c85e3b09bb0b1d77e200c2664fb3a143628a90d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCl4vwQB0p0BwuK\nDgwRK2dWOfZvr6/2J7iMrxRduPpT+ckQGA7tsfXp47OBGOY2RPFcEwC94hdUKaKP\n+6l4z6gWazJaB6HCUC4c3IW/eK4j7haYhL7ymZrq2KYEV7ldB/cLD4OBpTPUf5Wu\nyM+d1+UQehGjXC9nGQ4ogFfxWaxfrFx4c3R1QWq16tUJgzZpVwjo2scMqt6QuvGL\n4gmpvCqxxx8P+jAs/5Gl9+xAyqeLKvxRfzH5b9k3Bs/5H44yzSPjtLi45GmZwYwf\nkqJXoW5pZIhDvnrKYEWlrtLI26/CjCchvZnJQ+U6cQ3KEu8l6Kakoc5p2mPU69w9\nT+aE+1MhAgMBAAECggEABABHaPr9Lk5kn5KIl7DaK1xkifuoZiGratyv6OyCicDX\nTV6AU2Q4K4ApelwVPfhsleQVuzWXQZlre6Jr3ZUaV37xjPYRTk/MfO6UJiCNLP4b\n1kUOiNaVDPsL5OjrnTVAHbrkxq+Y9JQmpIS8R4NZtTAsi+DcnrD5lpcQvs8VUo1j\nkclneRjhgcQQoikDo6nOMWNkc/yj+uxrYfWsO6jVNir8g8A0yO6rOhnhL9v2Ka/S\nutFxcafttui1GtmcBv36hPmIOwKM53t8PuCdPqFsFOiCEOkSQl9Kn2bsd9qFNL17\nuzRyqnAiyX51XGqV44P0lbCdHfGhJHOA2D1nXPN5fQKBgQDndnVoU1DFaeJ3I99N\nC16/TpY7yhE50Vc4ESmPK07Pogjo3HQXYtR2Rz0c/F864pfEHHoELdcfcwjUAK9k\nUg33fc2zdIKk/8lJtRPQIe7A+DkeZp9S5hvyt+1SzznY1ehMyDfNEBK2oDOLNatk\nr8wwV9COy9I//pBMHppv0KX8hwKBgQC3eOSCakxl2Imh51Ed+/x5q8eK681D7LHO\nJdlG/Eyvdig/zItawE7xI0aqnaeBTnZqy1R+MzVvbsiDwgucdzjyrmb/uB7fXVA+\nVOLLk4uZ4oh4gq8Uo9wM/e6XAiXp1KEAEMzfEMtHGBVkgAHU8We1FEl+mIUtGhCT\n1xX1eoUFFwKBgAGxFPSZP0riFjymr3ghsCSXz3NKa8vPYuLPBU29lEriNUx2aAbP\nuxvOM30lvxBwHYnaZ23mY98f+R2Lj7yc+OspKTq5jEbmc7MtNqLbzKHuboRxXZK+\nic/BVmO3jgWuso71G6tNBcX978KBtun6evSTf7u7c6LyGl3kD17n2H67AoGAUQeD\nZFWuCAzqPCb9HFD94H6NUj1yGl2e6XytyTwEYjm87PBZW2szciwyOYgHQoR0qBXE\n6zeSkfRLemVo22GMNSHxO18Fw4BiwCSdRWuUbBIwU4jj6im0NciwZuD7/Zl6wZyp\n3pp8LJnmWMxwAqvbMY4UJ2UU7CZmy+RiPlguB2ECgYAyYaRxUz7GfVzH+JdiqrsV\nLcYAQbyHbmTT9Bt4RmnSjta0tGr0WXf8Unsjxep5lrXPnX9PT2geKQYiPXMg8IUH\n3HqKxvj2SwQgk3o5ngPILejgRSyDMoUWrkfjM8GwEyySCSr2WdnYvkXUL4U66sGb\nHnYeLVXdxR5NuWzmArEnrg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "cli-service-account-1@playground-s-11-09539975.iam.gserviceaccount.com",
+  "client_id": "118385208303483178383",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cli-service-account-1%40playground-s-11-09539975.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+   }
+    - conn_id: google_cloud_default
+      conn_type: google_cloud_platform
+      conn_host:
+      conn_schema:
+      conn_login:
+      conn_password:
+      conn_port:
+      conn_extra: {
+  "type": "service_account",
+  "project_id": "playground-s-11-09539975",
+  "private_key_id": "6c85e3b09bb0b1d77e200c2664fb3a143628a90d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCl4vwQB0p0BwuK\nDgwRK2dWOfZvr6/2J7iMrxRduPpT+ckQGA7tsfXp47OBGOY2RPFcEwC94hdUKaKP\n+6l4z6gWazJaB6HCUC4c3IW/eK4j7haYhL7ymZrq2KYEV7ldB/cLD4OBpTPUf5Wu\nyM+d1+UQehGjXC9nGQ4ogFfxWaxfrFx4c3R1QWq16tUJgzZpVwjo2scMqt6QuvGL\n4gmpvCqxxx8P+jAs/5Gl9+xAyqeLKvxRfzH5b9k3Bs/5H44yzSPjtLi45GmZwYwf\nkqJXoW5pZIhDvnrKYEWlrtLI26/CjCchvZnJQ+U6cQ3KEu8l6Kakoc5p2mPU69w9\nT+aE+1MhAgMBAAECggEABABHaPr9Lk5kn5KIl7DaK1xkifuoZiGratyv6OyCicDX\nTV6AU2Q4K4ApelwVPfhsleQVuzWXQZlre6Jr3ZUaV37xjPYRTk/MfO6UJiCNLP4b\n1kUOiNaVDPsL5OjrnTVAHbrkxq+Y9JQmpIS8R4NZtTAsi+DcnrD5lpcQvs8VUo1j\nkclneRjhgcQQoikDo6nOMWNkc/yj+uxrYfWsO6jVNir8g8A0yO6rOhnhL9v2Ka/S\nutFxcafttui1GtmcBv36hPmIOwKM53t8PuCdPqFsFOiCEOkSQl9Kn2bsd9qFNL17\nuzRyqnAiyX51XGqV44P0lbCdHfGhJHOA2D1nXPN5fQKBgQDndnVoU1DFaeJ3I99N\nC16/TpY7yhE50Vc4ESmPK07Pogjo3HQXYtR2Rz0c/F864pfEHHoELdcfcwjUAK9k\nUg33fc2zdIKk/8lJtRPQIe7A+DkeZp9S5hvyt+1SzznY1ehMyDfNEBK2oDOLNatk\nr8wwV9COy9I//pBMHppv0KX8hwKBgQC3eOSCakxl2Imh51Ed+/x5q8eK681D7LHO\nJdlG/Eyvdig/zItawE7xI0aqnaeBTnZqy1R+MzVvbsiDwgucdzjyrmb/uB7fXVA+\nVOLLk4uZ4oh4gq8Uo9wM/e6XAiXp1KEAEMzfEMtHGBVkgAHU8We1FEl+mIUtGhCT\n1xX1eoUFFwKBgAGxFPSZP0riFjymr3ghsCSXz3NKa8vPYuLPBU29lEriNUx2aAbP\nuxvOM30lvxBwHYnaZ23mY98f+R2Lj7yc+OspKTq5jEbmc7MtNqLbzKHuboRxXZK+\nic/BVmO3jgWuso71G6tNBcX978KBtun6evSTf7u7c6LyGl3kD17n2H67AoGAUQeD\nZFWuCAzqPCb9HFD94H6NUj1yGl2e6XytyTwEYjm87PBZW2szciwyOYgHQoR0qBXE\n6zeSkfRLemVo22GMNSHxO18Fw4BiwCSdRWuUbBIwU4jj6im0NciwZuD7/Zl6wZyp\n3pp8LJnmWMxwAqvbMY4UJ2UU7CZmy+RiPlguB2ECgYAyYaRxUz7GfVzH+JdiqrsV\nLcYAQbyHbmTT9Bt4RmnSjta0tGr0WXf8Unsjxep5lrXPnX9PT2geKQYiPXMg8IUH\n3HqKxvj2SwQgk3o5ngPILejgRSyDMoUWrkfjM8GwEyySCSr2WdnYvkXUL4U66sGb\nHnYeLVXdxR5NuWzmArEnrg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "cli-service-account-1@playground-s-11-09539975.iam.gserviceaccount.com",
+  "client_id": "118385208303483178383",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cli-service-account-1%40playground-s-11-09539975.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+   }
+  pools:
+    - pool_name:
+      pool_slot:
+      pool_description:
+  variables:
+    - variable_name:
+      variable_value:
