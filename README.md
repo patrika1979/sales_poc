@@ -1,4 +1,4 @@
 # Cloud data lake on GCP
 
-![image](architecture.png)
+![image](architecture1.png)
 
