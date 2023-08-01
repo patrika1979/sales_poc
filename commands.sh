@@ -1,5 +1,5 @@
 gcloud storage buckets create gs://$DEVSHELL_PROJECT_ID-data --location US-CENTRAL1
-gsutil cp -r data/* gs://$DEVSHELL_PROJECT_ID-data/vendas/
+gsutil cp -r data/* gs://$DEVSHELL_PROJECT_ID-data/Source_path/
 
 airflow connections add 'bigquery' \
     --conn-json '{

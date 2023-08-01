@@ -17,10 +17,10 @@ default_args = {
 }
 
 # Define dag variables
-project_id = 'playground-s-11-4c932a0d'
+project_id = 'playground-s-11-92fa6a6e'
 staging_dataset = 'DWH_STAGING'
 dwh_dataset = 'DWH'
-gs_bucket = 'playground-s-11-4c932a0d-data'
+gs_bucket = 'playground-s-11-92fa6a6e-data'
 
 # Define dag
 dag = DAG('cloud-data-lake-pipeline',
@@ -39,13 +39,57 @@ start_pipeline = DummyOperator(
 load_vendas_demo = GoogleCloudStorageToBigQueryOperator(
     task_id = 'load_vendas',
     bucket = gs_bucket,
-    source_objects = ['Output_path/processed_20230801_001700.csv'],
+    source_objects = ['Output_path/*'],
     destination_project_dataset_table = f'{project_id}:{staging_dataset}.vendas_staging',
-    schema_object = 'Output_path/vendas_staging.json',
     write_disposition='WRITE_TRUNCATE',
     source_format = 'csv',
     field_delimiter=',',
-    skip_leading_rows = 1
+    skip_leading_rows = 1,
+    schema_fields=[
+        {
+            "name": "extract_date",
+            "type": "STRING",
+            "mode": "REQUIRED",
+            "description": "Data extração"
+        },
+        {
+            "name": "ID_MARCA",
+            "type": "STRING",
+            "mode": "REQUIRED",
+            "description": "ID Marca produto"
+        },
+        {
+            "name": "MARCA",
+            "type": "STRING",
+            "mode": "NULLABLE",
+            "description": "Marca"
+        },
+        {
+            "name": "ID_LINHA",
+            "type": "STRING",
+            "mode": "NULLABLE",
+        "description": "ID da linha"
+        },
+        {
+            "name": "LINHA",
+            "type": "STRING",
+            "mode": "NULLABLE",
+        "description": "linha"
+        },
+        {
+            "name": "DATA_VENDA",
+            "type": "DATE",
+            "mode": "NULLABLE",
+            "description": "Data da venda"
+        },
+        {
+            "name": "QTD_VENDA",
+            "type": "INTEGER",
+            "mode": "NULLABLE",
+            "description": "Quantidade de venda"
+        }
+        ]
+
 )
 
 # Check loaded data not null
@@ -177,7 +221,7 @@ finish_pipeline = DummyOperator(
 
 # Define task dependencies
 #dag >> start_pipeline >> [load_us_cities_demo, load_airports, load_weather, load_immigration_data]
-dag >> start_pipeline >> load_vendas_demo >> check_vendas_demo
+dag >> start_pipeline >> load_vendas_demo #>> check_vendas_demo
 #load_vendas_demo >> check_us_cities_demo
 #load_airports >> check_airports
 #load_weather >> check_weather
