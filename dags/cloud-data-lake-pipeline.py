@@ -104,59 +104,16 @@ loaded_data_to_staging = DummyOperator(
     task_id = 'loaded_data_to_staging'
 )
 
-# Load dimensions data from files directly to DWH table
-load_country = GoogleCloudStorageToBigQueryOperator(
-    task_id = 'load_vendas_dw',
-    bucket = gs_bucket,
-    source_objects = ['master_data/I94CIT_I94RES.csv'],
-    destination_project_dataset_table = f'{project_id}:{dwh_dataset}.D_COUNTRY',
-    write_disposition='WRITE_TRUNCATE',
-    source_format = 'csv',
-    skip_leading_rows = 1,
-    schema_fields=[
-        {'name': 'COUNTRY_ID', 'type': 'NUMERIC', 'mode': 'NULLABLE'},
-        {'name': 'COUNTRY_NAME', 'type': 'STRING', 'mode': 'NULLABLE'},
-    ]
-)
-
-load_port = GoogleCloudStorageToBigQueryOperator(
-    task_id = 'load_port',
-    bucket = gs_bucket,
-    source_objects = ['master_data/I94PORT.csv'],
-    destination_project_dataset_table = f'{project_id}:{dwh_dataset}.D_PORT',
-    write_disposition='WRITE_TRUNCATE',
-    source_format = 'csv',
-    skip_leading_rows = 1,
-    schema_fields=[
-        {'name': 'PORT_ID', 'type': 'STRING', 'mode': 'NULLABLE'},
-        {'name': 'PORT_NAME', 'type': 'STRING', 'mode': 'NULLABLE'},
-    ]
-)
-
-load_state = GoogleCloudStorageToBigQueryOperator(
-    task_id = 'load_state',
-    bucket = gs_bucket,
-    source_objects = ['master_data/I94ADDR.csv'],
-    destination_project_dataset_table = f'{project_id}:{dwh_dataset}.D_STATE',
-    write_disposition='WRITE_TRUNCATE',
-    source_format = 'csv',
-    skip_leading_rows = 1,
-    schema_fields=[
-        {'name': 'STATE_ID', 'type': 'STRING', 'mode': 'NULLABLE'},
-        {'name': 'STATE_NAME', 'type': 'STRING', 'mode': 'NULLABLE'},
-    ]
-)
-
 # Transform, load, and check fact data
-create_immigration_data = BigQueryOperator(
-    task_id = 'create_immigration_data',
+create_vendas = BigQueryOperator(
+    task_id = 'create_vendas',
     use_legacy_sql = False,
     params = {
         'project_id': project_id,
         'staging_dataset': staging_dataset,
         'dwh_dataset': dwh_dataset
     },
-    sql = './sql/F_IMMIGRATION_DATA.sql'
+    sql = './sql/vendas_ano_mes.sql'
 )
 
 check_f_immigration_data = BigQueryCheckOperator(
@@ -221,7 +178,7 @@ finish_pipeline = DummyOperator(
 
 # Define task dependencies
 #dag >> start_pipeline >> [load_us_cities_demo, load_airports, load_weather, load_immigration_data]
-dag >> start_pipeline >> load_vendas_demo #>> check_vendas_demo
+dag >> start_pipeline >> load_vendas_demo >> check_vendas_demo >> create_vendas
 #load_vendas_demo >> check_us_cities_demo
 #load_airports >> check_airports
 #load_weather >> check_weather
