@@ -116,7 +116,7 @@ create_vendas = BigQueryOperator(
     sql = './sql/vendas_ano_mes.sql'
 )
 
-check_f_immigration_data = BigQueryCheckOperator(
+check_vendas_ano_mes = BigQueryCheckOperator(
     task_id = 'check_f_immigration_data',
     use_legacy_sql=False,
     params = {
@@ -124,11 +124,11 @@ check_f_immigration_data = BigQueryCheckOperator(
         'staging_dataset': staging_dataset,
         'dwh_dataset': dwh_dataset
     },
-    sql = f'SELECT count(*) = count(distinct cicid) FROM `{project_id}.{dwh_dataset}.F_IMMIGRATION_DATA`'
+    sql = f'SELECT count(*) = count(distinct cicid) FROM `{project_id}.{dwh_dataset}.vendas_ano_mes`'
 )
 
 # Create remaining dimensions data
-create_d_time = BigQueryOperator(
+create_marca_linha = BigQueryOperator(
     task_id = 'create_d_time',
     use_legacy_sql = False,
     params = {
@@ -136,41 +136,19 @@ create_d_time = BigQueryOperator(
         'staging_dataset': staging_dataset,
         'dwh_dataset': dwh_dataset
     },
-    sql = './sql/D_TIME.sql'
+    sql = './sql/vendas_marca_linha.sql'
 )
-
-create_d_weather = BigQueryOperator(
-    task_id = 'create_d_weather',
-    use_legacy_sql = False,
+check_marca_linha = BigQueryCheckOperator(
+    task_id = 'check_f_immigration_data',
+    use_legacy_sql=False,
     params = {
         'project_id': project_id,
         'staging_dataset': staging_dataset,
         'dwh_dataset': dwh_dataset
     },
-    sql = './sql/D_WEATHER.sql'
+    sql = f'SELECT count(*) = count(distinct cicid) FROM `{project_id}.{dwh_dataset}.vendas_marca_linha`'
 )
 
-create_d_airport = BigQueryOperator(
-    task_id = 'create_d_airport',
-    use_legacy_sql = False,
-    params = {
-        'project_id': project_id,
-        'staging_dataset': staging_dataset,
-        'dwh_dataset': dwh_dataset
-    },
-    sql = './sql/D_AIRPORT.sql'
-)
-
-create_d_city_demo = BigQueryOperator(
-    task_id = 'create_d_city_demo',
-    use_legacy_sql = False,
-    params = {
-        'project_id': project_id,
-        'staging_dataset': staging_dataset,
-        'dwh_dataset': dwh_dataset
-    },
-    sql = './sql/D_CITY_DEMO.sql'
-)
 
 finish_pipeline = DummyOperator(
     task_id = 'finish_pipeline'
@@ -178,7 +156,8 @@ finish_pipeline = DummyOperator(
 
 # Define task dependencies
 #dag >> start_pipeline >> [load_us_cities_demo, load_airports, load_weather, load_immigration_data]
-dag >> start_pipeline >> load_vendas_demo >> check_vendas_demo >> create_vendas
+dag >> start_pipeline >> load_vendas_demo >> check_vendas_demo >> loaded_data_to_staging
+loaded_data_to_staging >> [create_vendas_ano_mes >> check_vendas_ano_mes] >> [create_marca_linha,check_marca_linha]
 #load_vendas_demo >> check_us_cities_demo
 #load_airports >> check_airports
 #load_weather >> check_weather
