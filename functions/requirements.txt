@@ -1,0 +1,12 @@
+# The requirement.txt must contain following dependencies
+# Function dependencies, for example:
+# package>=version
+pandas==1.4.2
+numpy
+openpyxl
+datetime
+google-cloud
+gcsfs
+google-cloud-bigquery
+google-cloud-storage
+pyarrow
