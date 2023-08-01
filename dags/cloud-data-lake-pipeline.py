@@ -39,7 +39,7 @@ start_pipeline = DummyOperator(
 load_vendas_demo = GoogleCloudStorageToBigQueryOperator(
     task_id = 'load_vendas',
     bucket = gs_bucket,
-    source_objects = ['Output_path/'],
+    source_objects = ['Output_path/processed_20230801_001700.csv'],
     destination_project_dataset_table = f'{project_id}:{staging_dataset}.vendas_staging',
     schema_object = 'Output_path/vendas_staging.json',
     write_disposition='WRITE_TRUNCATE',
@@ -49,7 +49,7 @@ load_vendas_demo = GoogleCloudStorageToBigQueryOperator(
 )
 
 # Check loaded data not null
-check_us_cities_demo = BigQueryCheckOperator(
+check_vendas_demo = BigQueryCheckOperator(
     task_id = 'check_vendas_demo',
     use_legacy_sql=False,
     sql = f'SELECT count(*) FROM `{project_id}.{staging_dataset}.vendas_staging`'
@@ -177,7 +177,7 @@ finish_pipeline = DummyOperator(
 
 # Define task dependencies
 #dag >> start_pipeline >> [load_us_cities_demo, load_airports, load_weather, load_immigration_data]
-dag >> start_pipeline >> load_vendas_demo #>> check_us_cities_demo
+dag >> start_pipeline >> load_vendas_demo >> check_vendas_demo
 #load_vendas_demo >> check_us_cities_demo
 #load_airports >> check_airports
 #load_weather >> check_weather
