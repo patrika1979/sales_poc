@@ -105,8 +105,8 @@ loaded_data_to_staging = DummyOperator(
 )
 
 # Transform, load, and check fact data
-create_vendas = BigQueryOperator(
-    task_id = 'create_vendas',
+create_vendas_ano_mes = BigQueryOperator(
+    task_id = 'create_vendas_ano_mes',
     use_legacy_sql = False,
     params = {
         'project_id': project_id,
@@ -117,7 +117,7 @@ create_vendas = BigQueryOperator(
 )
 
 check_vendas_ano_mes = BigQueryCheckOperator(
-    task_id = 'check_f_immigration_data',
+    task_id = 'check_vendas_ano_mes',
     use_legacy_sql=False,
     params = {
         'project_id': project_id,
@@ -129,7 +129,7 @@ check_vendas_ano_mes = BigQueryCheckOperator(
 
 # Create remaining dimensions data
 create_marca_linha = BigQueryOperator(
-    task_id = 'create_d_time',
+    task_id = 'create_marca_linha',
     use_legacy_sql = False,
     params = {
         'project_id': project_id,
@@ -139,7 +139,7 @@ create_marca_linha = BigQueryOperator(
     sql = './sql/vendas_marca_linha.sql'
 )
 check_marca_linha = BigQueryCheckOperator(
-    task_id = 'check_f_immigration_data',
+    task_id = 'check_marca_linha',
     use_legacy_sql=False,
     params = {
         'project_id': project_id,
@@ -156,8 +156,8 @@ finish_pipeline = DummyOperator(
 
 # Define task dependencies
 #dag >> start_pipeline >> [load_us_cities_demo, load_airports, load_weather, load_immigration_data]
-dag >> start_pipeline >> load_vendas_demo >> check_vendas_demo >> loaded_data_to_staging
-loaded_data_to_staging >> [create_vendas_ano_mes >> check_vendas_ano_mes] >> [create_marca_linha,check_marca_linha]
+dag >> start_pipeline >> load_vendas_demo >> loaded_data_to_staging
+loaded_data_to_staging >> check_vendas_demo >> [create_vendas_ano_mes, check_vendas_ano_mes] >> create_marca_linha >> check_marca_linha
 #load_vendas_demo >> check_us_cities_demo
 #load_airports >> check_airports
 #load_weather >> check_weather
