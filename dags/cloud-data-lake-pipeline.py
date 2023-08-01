@@ -17,15 +17,15 @@ default_args = {
 }
 
 # Define dag variables
-project_id = 'playground-s-11-7c3c72de'
+project_id = 'playground-s-11-4c932a0d'
 staging_dataset = 'DWH_STAGING'
 dwh_dataset = 'DWH'
-gs_bucket = 'playground-s-11-7c3c72de-data'
+gs_bucket = 'playground-s-11-4c932a0d-data'
 
 # Define dag
 dag = DAG('cloud-data-lake-pipeline',
           start_date=datetime.now(),
-          schedule_interval='@once',
+          schedule_interval='0 * * * *', #'@once',
           concurrency=5,
           max_active_runs=1,
           default_args=default_args)
@@ -39,12 +39,12 @@ start_pipeline = DummyOperator(
 load_vendas_demo = GoogleCloudStorageToBigQueryOperator(
     task_id = 'load_vendas',
     bucket = gs_bucket,
-    source_objects = ['vendas/vendas.csv'],
+    source_objects = ['Output_path/'],
     destination_project_dataset_table = f'{project_id}:{staging_dataset}.vendas_staging',
-    schema_object = 'vendas/vendas_staging.json',
+    schema_object = 'Output_path/vendas_staging.json',
     write_disposition='WRITE_TRUNCATE',
     source_format = 'csv',
-    field_delimiter=';',
+    field_delimiter=',',
     skip_leading_rows = 1
 )
 
