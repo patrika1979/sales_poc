@@ -156,8 +156,8 @@ finish_pipeline = DummyOperator(
 
 # Define task dependencies
 #dag >> start_pipeline >> [load_us_cities_demo, load_airports, load_weather, load_immigration_data]
-dag >> start_pipeline >> load_vendas_demo >> loaded_data_to_staging
-loaded_data_to_staging >> check_vendas_demo >> [create_vendas_ano_mes, check_vendas_ano_mes] >> create_marca_linha >> check_marca_linha
+dag >> start_pipeline >> load_vendas_demo >> check_vendas_demo >> loaded_data_to_staging
+loaded_data_to_staging >> [create_vendas_ano_mes, check_vendas_ano_mes] >> create_marca_linha >> check_marca_linha
 #load_vendas_demo >> check_us_cities_demo
 #load_airports >> check_airports
 #load_weather >> check_weather
