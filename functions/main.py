@@ -34,7 +34,7 @@ def gcs_trigger_xlsx_loader(event, context):
 def sales_file_load(bucket, filename):
     src_bucket_name_param=str(bucket) #the bucket where the file is supposed to land
     
-    project_name_param='playground-s-11-4c932a0d' #the GCP project name
+    project_name_param='playground-s-11-cf834d11' #the GCP project name
     
     fs=gcsfs.GCSFileSystem(project=project_name_param)
     client=storage.Client()

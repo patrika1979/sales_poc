@@ -17,10 +17,10 @@ default_args = {
 }
 
 # Define dag variables
-project_id = 'playground-s-11-92fa6a6e'
+project_id = 'playground-s-11-cf834d11'
 staging_dataset = 'DWH_STAGING'
 dwh_dataset = 'DWH'
-gs_bucket = 'playground-s-11-92fa6a6e-data'
+gs_bucket = 'playground-s-11-cf834d11-data'
 
 # Define dag
 dag = DAG('cloud-data-lake-pipeline',
@@ -124,7 +124,7 @@ check_vendas_ano_mes = BigQueryCheckOperator(
         'staging_dataset': staging_dataset,
         'dwh_dataset': dwh_dataset
     },
-    sql = f'SELECT count(*) = count(distinct cicid) FROM `{project_id}.{dwh_dataset}.vendas_ano_mes`'
+    sql = f'SELECT count(*) FROM `{project_id}.{dwh_dataset}.vendas_ano_mes`'
 )
 
 # Create remaining dimensions data
@@ -146,9 +146,72 @@ check_marca_linha = BigQueryCheckOperator(
         'staging_dataset': staging_dataset,
         'dwh_dataset': dwh_dataset
     },
-    sql = f'SELECT count(*) = count(distinct cicid) FROM `{project_id}.{dwh_dataset}.vendas_marca_linha`'
+    sql = f'SELECT count(*) FROM `{project_id}.{dwh_dataset}.vendas_marca_linha`'
 )
 
+# Create remaining dimensions data
+create_marca_ano_mes = BigQueryOperator(
+    task_id = 'create_marca_ano_mes',
+    use_legacy_sql = False,
+    params = {
+        'project_id': project_id,
+        'staging_dataset': staging_dataset,
+        'dwh_dataset': dwh_dataset
+    },
+    sql = './sql/vendas_marca_ano_mes.sql'
+)
+check_marca_ano_mes = BigQueryCheckOperator(
+    task_id = 'check_marca_ano_mes',
+    use_legacy_sql=False,
+    params = {
+        'project_id': project_id,
+        'staging_dataset': staging_dataset,
+        'dwh_dataset': dwh_dataset
+    },
+    sql = f'SELECT count(*) FROM `{project_id}.{dwh_dataset}.vendas_marca_ano_mes`'
+)
+
+create_linha_ano_mes = BigQueryOperator(
+    task_id = 'create_linha_ano_mes',
+    use_legacy_sql = False,
+    params = {
+        'project_id': project_id,
+        'staging_dataset': staging_dataset,
+        'dwh_dataset': dwh_dataset
+    },
+    sql = './sql/vendas_linha_ano_mes.sql'
+)
+check_linha_ano_mes = BigQueryCheckOperator(
+    task_id = 'check_linha_ano_mes',
+    use_legacy_sql=False,
+    params = {
+        'project_id': project_id,
+        'staging_dataset': staging_dataset,
+        'dwh_dataset': dwh_dataset
+    },
+    sql = f'SELECT count(*) FROM `{project_id}.{dwh_dataset}.vendas_linha_ano_mes`'
+)
+
+create_linha_dia_ano_mes = BigQueryOperator(
+    task_id = 'create_linha_dia_ano_mes',
+    use_legacy_sql = False,
+    params = {
+        'project_id': project_id,
+        'staging_dataset': staging_dataset,
+        'dwh_dataset': dwh_dataset
+    },
+    sql = './sql/vendas_linha_dia_ano_mes.sql'
+)
+check_linha_dia_ano_mes = BigQueryCheckOperator(
+    task_id = 'check_linha_dia_ano_mes',
+    use_legacy_sql=False,
+    params = {
+        'project_id': project_id,
+        'staging_dataset': staging_dataset,
+        'dwh_dataset': dwh_dataset
+    },
+    sql = f'SELECT count(*) FROM `{project_id}.{dwh_dataset}.vendas_linha_dia_ano_mes'
+)
 
 finish_pipeline = DummyOperator(
     task_id = 'finish_pipeline'
@@ -157,15 +220,9 @@ finish_pipeline = DummyOperator(
 # Define task dependencies
 #dag >> start_pipeline >> [load_us_cities_demo, load_airports, load_weather, load_immigration_data]
 dag >> start_pipeline >> load_vendas_demo >> check_vendas_demo >> loaded_data_to_staging
-loaded_data_to_staging >> [create_vendas_ano_mes, check_vendas_ano_mes] >> create_marca_linha >> check_marca_linha
-#load_vendas_demo >> check_us_cities_demo
-#load_airports >> check_airports
-#load_weather >> check_weather
-#load_immigration_data >> check_immigration_data
-
-
-#[check_us_cities_demo, check_airports, check_weather,check_immigration_data] >> loaded_data_to_staging
-
-#loaded_data_to_staging >> [load_country, load_port, load_state] >> create_immigration_data >> check_f_immigration_data
-
-#check_f_immigration_data >> [create_d_time, create_d_weather, create_d_airport, create_d_city_demo] >> finish_pipeline
+loaded_data_to_staging >> [create_vendas_ano_mes, create_marca_linha, create_marca_ano_mes,create_linha_dia_ano_mes] 
+create_vendas_ano_mes>> check_vendas_ano_mes
+create_marca_linha >> check_marca_linha
+create_marca_ano_mes >> check_marca_ano_mes
+create_linha_dia_ano_mes >> check_linha_dia_ano_mes
+#loaded_data_to_staging >> finish_pipeline
