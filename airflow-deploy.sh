@@ -1,7 +1,7 @@
 #change project-id below
 
 #mudar projeto abaixo
-gcloud config set project playground-s-11-b1c8573c
+gcloud config set project playground-s-11-b787e797
 
 gcloud services enable serviceusage.googleapis.com
 gcloud services enable iam.serviceAccounts.create
@@ -51,7 +51,7 @@ gcloud functions deploy ingestion_vendas \
 --allow-unauthenticated \
 --memory=8192MB \
 --max-instances=3 \
---trigger-bucket=playground-s-11-b1c8573c-data
+--trigger-bucket=playground-s-11-b787e797-data
 
 #open Airflow
 #create two airflow connections
@@ -61,7 +61,7 @@ google_cloud_default
 #go to IAm and then left menu - service account and copy the key to be paste in the keyjson in the connection
 
 #load data into bucket to trigger function
-gsutil cp -r data/* gs://$DEVSHELL_PROJECT_ID-data/Source_path/
+gsutil cp -r data/base_2017.xlsx gs://$DEVSHELL_PROJECT_ID-data/Source_path/
 
 #got to dag and change project-id and bucket name
 

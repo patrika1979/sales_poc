@@ -20,10 +20,10 @@ default_args = {
 }
 
 # Define dag variables
-project_id = 'playground-s-11-b1c8573c'
+project_id = 'playground-s-11-b787e797'
 staging_dataset = 'DWH_STAGING'
 dwh_dataset = 'DWH'
-gs_bucket = 'playground-s-11-b1c8573c-data'
+gs_bucket = f'{project_id}-data'
 FILE_NAME = 'processed.csv'
 
 # Define dag
