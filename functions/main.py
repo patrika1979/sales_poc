@@ -34,7 +34,7 @@ def gcs_trigger_xlsx_loader(event, context):
 def sales_file_load(bucket, filename):
     src_bucket_name_param=str(bucket) #the bucket where the file is supposed to land
     
-    project_name_param='playground-s-11-cf834d11' #the GCP project name
+    project_name_param='playground-s-11-b1c8573c' #the GCP project name
     
     fs=gcsfs.GCSFileSystem(project=project_name_param)
     client=storage.Client()
@@ -44,8 +44,8 @@ def sales_file_load(bucket, filename):
     #declare the filepaths
     input_file_path= filename['name']
     #input_file_path = absolute_path + filename['name']
-    output_file_path = f'Output_path/processed_{today}.csv'
-    
+    #output_file_path = f'Output_path/processed_{today}.csv'
+    output_file_path = f'Output_path/processed.csv'
         
     #the tabs which we are supposed to read. 
     required_tabs=['Sheet1', 'Planilha1']

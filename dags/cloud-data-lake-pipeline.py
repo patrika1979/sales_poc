@@ -5,7 +5,8 @@ from airflow.operators.dummy_operator import DummyOperator
 from datetime import datetime, timedelta
 from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOperator
 from airflow.contrib.operators.bigquery_check_operator import BigQueryCheckOperator
-
+from airflow.contrib.sensors.gcs_sensor import GoogleCloudStorageObjectSensor
+   
 # Define default arguments
 default_args = {
     'owner': 'Patrícia Nati',
@@ -17,10 +18,11 @@ default_args = {
 }
 
 # Define dag variables
-project_id = 'playground-s-11-cf834d11'
+project_id = 'playground-s-11-b1c8573c'
 staging_dataset = 'DWH_STAGING'
 dwh_dataset = 'DWH'
-gs_bucket = 'playground-s-11-cf834d11-data'
+gs_bucket = 'playground-s-11-b1c8573c-data'
+FILE_NAME = 'processed.csv'
 
 # Define dag
 dag = DAG('cloud-data-lake-pipeline',
@@ -35,11 +37,19 @@ start_pipeline = DummyOperator(
     dag = dag
 )
 
+sens_object_create = GoogleCloudStorageObjectSensor(
+        task_id='sens_object_create',
+        bucket= gs_bucket,
+        object=f'Output_path/{FILE_NAME}',
+        google_cloud_conn_id='google_cloud_default'
+    )
+
 # Load data from GCS to BQ
 load_vendas_demo = GoogleCloudStorageToBigQueryOperator(
     task_id = 'load_vendas',
     bucket = gs_bucket,
-    source_objects = ['Output_path/*'],
+    #source_objects = [f'Output_path/{FILE_NAME}'],
+    source_objects = f'Output_path/{FILE_NAME}',
     destination_project_dataset_table = f'{project_id}:{staging_dataset}.vendas_staging',
     write_disposition='WRITE_TRUNCATE',
     source_format = 'csv',
@@ -219,7 +229,7 @@ finish_pipeline = DummyOperator(
 
 # Define task dependencies
 #dag >> start_pipeline >> [load_us_cities_demo, load_airports, load_weather, load_immigration_data]
-dag >> start_pipeline >> load_vendas_demo >> check_vendas_demo >> loaded_data_to_staging
+dag >> start_pipeline >> sens_object_create >>load_vendas_demo >> check_vendas_demo >> loaded_data_to_staging
 loaded_data_to_staging >> [create_vendas_ano_mes, create_marca_linha, create_marca_ano_mes,create_linha_dia_ano_mes] 
 create_vendas_ano_mes>> check_vendas_ano_mes
 create_marca_linha >> check_marca_linha

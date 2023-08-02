@@ -1,2 +1,3 @@
 .astro
 .env
+infra/terraform.tfvars

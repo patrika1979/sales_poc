@@ -10,3 +10,4 @@ gcsfs
 google-cloud-bigquery
 google-cloud-storage
 pyarrow
+gcsfs
