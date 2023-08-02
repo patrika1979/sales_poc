@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 from airflow.contrib.operators.gcs_to_bq import GoogleCloudStorageToBigQueryOperator
 from airflow.contrib.operators.bigquery_check_operator import BigQueryCheckOperator
 from airflow.contrib.sensors.gcs_sensor import GoogleCloudStorageObjectSensor
+from airflow.contrib.operators.gcs_delete_operator import GoogleCloudStorageDeleteOperator
+
    
 # Define default arguments
 default_args = {
@@ -48,8 +50,8 @@ sens_object_create = GoogleCloudStorageObjectSensor(
 load_vendas_demo = GoogleCloudStorageToBigQueryOperator(
     task_id = 'load_vendas',
     bucket = gs_bucket,
-    #source_objects = [f'Output_path/{FILE_NAME}'],
-    source_objects = f'Output_path/{FILE_NAME}',
+    source_objects = [f'Output_path/{FILE_NAME}'],
+    #source_objects = f'Output_path/{FILE_NAME}',
     destination_project_dataset_table = f'{project_id}:{staging_dataset}.vendas_staging',
     write_disposition='WRITE_TRUNCATE',
     source_format = 'csv',
@@ -100,6 +102,11 @@ load_vendas_demo = GoogleCloudStorageToBigQueryOperator(
         }
         ]
 
+)
+delete_data = GoogleCloudStorageDeleteOperator(
+   task_id='delete_data',
+   bucket_name= gs_bucket,
+   prefix='Output_path/processed.csv'
 )
 
 # Check loaded data not null
@@ -229,7 +236,7 @@ finish_pipeline = DummyOperator(
 
 # Define task dependencies
 #dag >> start_pipeline >> [load_us_cities_demo, load_airports, load_weather, load_immigration_data]
-dag >> start_pipeline >> sens_object_create >>load_vendas_demo >> check_vendas_demo >> loaded_data_to_staging
+dag >> start_pipeline >> sens_object_create >> load_vendas_demo >> check_vendas_demo >> delete_data >> loaded_data_to_staging
 loaded_data_to_staging >> [create_vendas_ano_mes, create_marca_linha, create_marca_ano_mes,create_linha_dia_ano_mes] 
 create_vendas_ano_mes>> check_vendas_ano_mes
 create_marca_linha >> check_marca_linha
