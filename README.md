@@ -1,8 +1,7 @@
 # Case 1
 
-![image](case1.png)
+![image](architecture1.png)
 
 # Case 2
 
-![image](architecture1.png)
-
+![image](case2.b.png)
