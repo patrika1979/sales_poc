@@ -76,10 +76,7 @@ def sales_file_load(bucket, filename):
     client=storage.Client()
     
     extract_datetime=str(datetime.today().strftime("%Y-%m-%d %H%M%S"))
-    source_dir='Source_path/'
-    output_dir='Output_path/'
-    target_dir='Archive_path/archived_files_'+extract_datetime+'/'
-    
+       
    
     bucket.blob(output_file_path).upload_from_string(df.to_csv(index=False, encoding='utf-8'), 
 content_type='application/octet-stream')
