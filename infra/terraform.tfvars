@@ -1,5 +1,5 @@
 # ID of the project in which you want to deploy the solution
-project_id = "playground-s-11-ed2a7c32"
+project_id = "playground-s-11-de2a9380"
 
 # Google Cloud region where you want to deploy the solution
 # Example: us-central1

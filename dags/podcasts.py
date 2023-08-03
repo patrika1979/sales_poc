@@ -25,9 +25,11 @@ staging_dataset = 'DWH_STAGING'
 dwh_dataset = 'DWH'
 gs_bucket = f'{project_id}-data'
 FILE_NAME = 'processed.csv'
+gs_bucket_podcasts = 'playground-s-11-de2a9380-databricks'
+
 
 # Define dag
-dag = DAG('cloud-data-lake-pipeline',
+dag = DAG('cloud-data-lake-pipeline2',
           start_date=datetime.now(),
           schedule_interval='0 * * * *', #'@once',
           concurrency=5,
@@ -103,6 +105,44 @@ load_vendas_demo = GoogleCloudStorageToBigQueryOperator(
         ]
 
 )
+
+load_podcasts = GoogleCloudStorageToBigQueryOperator(
+    task_id = 'load_podcasts',
+    bucket = gs_bucket_podcasts,
+    source_objects = ['podcast_files3/part-00000-tid-2237356865376351930-0d81fcb2-50bb-47cc-bf64-7033428d8d28-17-1-c000.csv'],
+    destination_project_dataset_table = f'{project_id}:{dwh_dataset}.podcasts',
+    write_disposition='WRITE_TRUNCATE',
+    source_format = 'csv',
+    field_delimiter=',',
+    skip_leading_rows = 1,
+    schema_fields=[
+        {
+            "name": "show_name",
+            "type": "STRING",
+            "mode": "REQUIRED",
+            "description": "Nome do podcast"
+        },
+        {
+            "name": "espisode_id",
+            "type": "STRING",
+            "mode": "REQUIRED",
+            "description": "Episodios do podcast"
+        },
+        {
+            "name": "date",
+            "type": "DATE",
+            "mode": "NULLABLE",
+            "description": "Date"
+        },
+        {
+            "name": "description",
+            "type": "STRING",
+            "mode": "NULLABLE",
+        "description": "Description"
+        },
+    ]
+)
+
 delete_data = GoogleCloudStorageDeleteOperator(
    task_id='delete_data',
    bucket_name= gs_bucket,
@@ -236,10 +276,10 @@ finish_pipeline = DummyOperator(
 
 # Define task dependencies
 #dag >> start_pipeline >> [load_us_cities_demo, load_airports, load_weather, load_immigration_data]
-dag >> start_pipeline >> sens_object_create >> load_vendas_demo >> check_vendas_demo >> delete_data >> loaded_data_to_staging
+dag >> start_pipeline >> load_podcasts >> sens_object_create >> load_vendas_demo >> check_vendas_demo >> delete_data >> loaded_data_to_staging
 loaded_data_to_staging >> [create_vendas_ano_mes, create_marca_linha, create_marca_ano_mes,create_linha_dia_ano_mes] 
 create_vendas_ano_mes>> check_vendas_ano_mes
 create_marca_linha >> check_marca_linha
 create_marca_ano_mes >> check_marca_ano_mes
 create_linha_dia_ano_mes >> check_linha_dia_ano_mes
-#loaded_data_to_staging >> finish_pipeline
+

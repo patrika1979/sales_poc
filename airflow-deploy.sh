@@ -1,7 +1,7 @@
 #change project-id below
 
 #mudar projeto abaixo
-gcloud config set project playground-s-11-ed2a7c32
+gcloud config set project playground-s-11-de2a9380
 
 gcloud services enable serviceusage.googleapis.com
 gcloud services enable iam.googleapis.com
@@ -49,7 +49,7 @@ gcloud functions deploy ingestion_vendas \
 --allow-unauthenticated \
 --memory=8192MB \
 --max-instances=3 \
---trigger-bucket=playground-s-11-ed2a7c32-data
+--trigger-bucket=playground-s-11-de2a9380-data
 
 #open Airflow
 #create two airflow connections
