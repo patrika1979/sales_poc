@@ -20,7 +20,7 @@ default_args = {
 }
 
 # Define dag variables
-project_id = 'playground-s-11-b787e797'
+project_id = 'playground-s-11-ed2a7c32'
 staging_dataset = 'DWH_STAGING'
 dwh_dataset = 'DWH'
 gs_bucket = f'{project_id}-data'
@@ -227,7 +227,7 @@ check_linha_dia_ano_mes = BigQueryCheckOperator(
         'staging_dataset': staging_dataset,
         'dwh_dataset': dwh_dataset
     },
-    sql = f'SELECT count(*) FROM `{project_id}.{dwh_dataset}.vendas_linha_dia_ano_mes'
+    sql = f'SELECT count(*) FROM `{project_id}.{dwh_dataset}.vendas_linha_dia_ano_mes`'
 )
 
 finish_pipeline = DummyOperator(

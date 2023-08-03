@@ -1,20 +1,18 @@
 #change project-id below
 
 #mudar projeto abaixo
-gcloud config set project playground-s-11-b787e797
+gcloud config set project playground-s-11-ed2a7c32
 
 gcloud services enable serviceusage.googleapis.com
-gcloud services enable iam.serviceAccounts.create
 gcloud services enable iam.googleapis.com
 gcloud services enable bigquery.googleapis.com
 gcloud config set compute/zone us-central1-a 
 gcloud services enable eventarc.googleapis.com
 gcloud services enable run.googleapis.com
-gcloud services enable storage.objects.create
 gcloud services enable cloudfunctions.googleapis.com
 gcloud services enable cloudbuild.googleapis.com
 
-cd case_botiario
+cd case_boticario
 curl -sSL install.astronomer.io | sudo bash -s
 astro dev init
 astro dev start
@@ -51,7 +49,7 @@ gcloud functions deploy ingestion_vendas \
 --allow-unauthenticated \
 --memory=8192MB \
 --max-instances=3 \
---trigger-bucket=playground-s-11-b787e797-data
+--trigger-bucket=playground-s-11-ed2a7c32-data
 
 #open Airflow
 #create two airflow connections
