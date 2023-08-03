@@ -1,6 +1,6 @@
 # Case 1
 
-![image](architecture1.png)
+![image](case1.png)
 
 # Case 2
 
